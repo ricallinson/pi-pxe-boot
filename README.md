@@ -155,7 +155,7 @@ When a client successfully connects you'll see log lines of the conversation as 
 
 ### Serve a Filesystem
 
-Now your PXE enabled clients can successfully request a filesystem we need to provide one. For this example we'll use NFS to serve one.
+Now your PXE enabled clients can successfully request a filesystem we need to provide one. For this example we'll use NFS to the serve one we made earlier.
 
 	sudo apt-get install nfs-kernel-server
 	echo "/nfs/client1 *(rw,sync,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
