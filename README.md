@@ -1,8 +1,8 @@
 # Setup PXE Boot on a Pi
 
-## Creating a Raspbian SD Card
+## Creating a Raspbian SSD Card
 
-First create a SD card with the latest [Raspbian Lite](https://www.raspberrypi.org/documentation/installation/installing-images/README.md) image (these are OSX commands).
+First create a SSD card with the latest [Raspbian Lite](https://www.raspberrypi.org/documentation/installation/installing-images/README.md) image (these are OSX commands).
 
 	diskutil list
 	diskutil unmountDisk /dev/disk<disk# from diskutil>
@@ -12,7 +12,7 @@ You can press Ctrl+T to see the progress.
 
 ## Enabling USB/Network Boot on a Pi
 
-Boot into a Pi using the SD card created above and log on. At the command line execute the following to enable USB booting;
+Boot into a Pi using the SSD card created above and log on. At the command line execute the following to enable USB booting;
 
 	sudo apt-get update && sudo apt-get upgrade
 	echo program_usb_boot_mode=1 | sudo tee -a /boot/config.txt
@@ -22,17 +22,17 @@ After the reboot login and check the __OTP__ has been programed correctly.
 
 	vcgencmd otp_dump | grep 17:
 
-This should return __17:3020000a__. You can now shutdown the Pi and remove the SD card. Once this process is done the Pi does not require an SD card to network boot.
+This should return __17:3020000a__. You can now shutdown the Pi and remove the SSD card. Once this process is done the Pi does not require an SSD card to network boot.
 
 	sudo shutdown -h now
 
 ### Enable Again & Again
 
-The SD card you just created can now be used to enable USB/Network booting for any Pi that starts-up with it. Once the Pi is shutdown you can remove the card and enable the next Pi.
+The SSD card you just created can now be used over and over again to enable USB/Network booting for any Pi that starts-up with it. Once the Pi is shutdown you can remove the card and enable the next Pi. Remember, once this is done the Pi doesn't require an SSD card to network boot. 
 
 ## Create a PXE Server
 
-Make a new Raspbian SD card or USB drive as in the first step. Login and use use `sudo raspi-config` to expand the file system. Then update the system with the following command;
+Make a new Raspbian SSD card or USB drive as in the first step. Login and use use `sudo raspi-config` to expand the file system. Then update the system with the following command;
 
 	sudo apt-get update && sudo apt-get upgrade
 
@@ -44,7 +44,7 @@ For the client to boot it will need a filesystem. We will copy the one we're cur
 	sudo mkdir -p /nfs/client1
 	sudo rsync -xa --progress --exclude /nfs / /nfs/client1
 
-Now we regenerate SSH host keys on the client filesystem by chrooting into it;
+Now regenerate SSH host keys on the client filesystem by chrooting into it;
 
 	cd /nfs/client1
 	sudo mount --bind /dev dev
@@ -60,7 +60,7 @@ Now we regenerate SSH host keys on the client filesystem by chrooting into it;
 
 ### Switch to a Fixed IP Address
 
-To continue you need to know your networks router IP address, the IP address of this Pi and the IP address of the networks DNS server;
+To continue you need to know your networks router IP address, the IP address of the current Pi and the IP address of the networks DNS server;
 
 	# Router IP Address
 	ip route | grep default | awk '{print $3}'
@@ -73,7 +73,7 @@ With the above information noted we can now change the network configuration.
 
 	sudo nano /etc/network/interfaces
 
-Replace the line starting with `iface eth0 inet manual` with the following. The `address` is the first address is the current IP address (from the middle command), the `netmask` address is 255.255.255.0 and the `gateway` IP address is the router IP address received from the last command.
+Replace the line starting with `iface eth0 inet manual` with the following. The `address` is the current IP address (from the middle command), the `netmask` address is 255.255.255.0 and the `gateway` IP address is the router IP address (from the last command).
 
 	auto eth0
 	iface eth0 inet static
@@ -81,7 +81,7 @@ Replace the line starting with `iface eth0 inet manual` with the following. The 
 	    netmask 255.255.255.0
 	    gateway 10.0.0.1
 
-Now disable the DHCP client daemon and switch to standard Debian networking so we can use the static IP address we just added. Then reboot so the changes take effect;
+Now disable the DHCP client daemon and switch to standard Debian networking so we can use the static IP address we just added. Reboot so the changes take effect;
 
 	sudo systemctl disable dhcpcd
 	sudo systemctl enable networking
@@ -111,7 +111,7 @@ With `dnsmasq` installed we need to change its configuration so it will respond 
 	echo | sudo tee /etc/dnsmasq.conf
 	sudo nano /etc/dnsmasq.conf
 
-With the `dnsmasq.conf now empty add the following;
+With the `dnsmasq.conf` now empty insert the following. The value of `dhcp-range` must be the broadcast address of your current network. This will be the current IP address with the last number changed to __255__.
 
 	port=0
 	dhcp-range=10.0.0.255,proxy
@@ -119,8 +119,6 @@ With the `dnsmasq.conf now empty add the following;
 	enable-tftp
 	tftp-root=/tftpboot
 	pxe-service=0,"Raspberry Pi Boot"
-
-The value of `dhcp-range` must be the broadcast address of your current network. This will be the current IP address with the last number changed to __255__.
 
 Now create a `/tftpboot` directory and start the `dnsmasq` service.
 
@@ -141,15 +139,15 @@ Stop monitoring by typing `CTRL+C`.
 
 * __BUGS:__ If you don't see any requests from the client it could be that you've run into one of the few Pi bugs effecting network booting. To see if you have, follow these [instructions](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bootmodes/) to use the latest `bootcode.bin`. Now try the `tail` command above again. If this doesn't fix it Google is your friend.
 
-Once you know the client is sending requests you will need to copy `bootcode.bin` and `start.elf` into the `/tftpboot` directory. We can do this by copying the files from `/boot`. Since we also need a kernel so we might as well copy the entire boot directory.
+Once you know the client is sending requests you will need to copy `bootcode.bin` and `start.elf` into the `/tftpboot` directory. We can do this by copying the files from `/boot`. Since we also need a kernel we might as well copy the entire boot directory.
 
 	cp -r /boot/* /tftpboot
 
-Now we restart the `dnsmasq` service so it knows the boot files are there to serve;
+Now restart the `dnsmasq` service so it knows the boot files are there to serve;
 
 	sudo systemctl restart dnsmasq
 
-If all has gone well this should now allow the client Pi to boot through until it tries to load a root filesystem (which it doesn't have). You can test this by running the tail command again.
+If all has gone well this should now allow the client Pi to boot through until it tries to load a root filesystem (which it doesn't have). You can test this by running the tail command again and then powering on your PXE enabled client Pi.
 
 	tail -F /var/log/daemon.log
 
@@ -157,7 +155,7 @@ When a client successfully connects you'll see log lines of the conversation as 
 
 ### Serve a Filesystem
 
-Now the PXE enabled clients can successfully request a filesystem we need to provide one. For this example we'll use NFS to serve one.
+Now your PXE enabled clients can successfully request a filesystem we need to provide one. For this example we'll use NFS to serve one.
 
 	sudo apt-get install nfs-kernel-server
 	echo "/nfs/client1 *(rw,sync,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
@@ -174,7 +172,7 @@ From `root=` onwards replace it with the following substituting the IP address w
 
 	root=/dev/nfs nfsroot=10.0.0.88:/nfs/client1 rw ip=dhcp rootwait elevator=deadline
 
-Finally we remove unnecessary information from `/nfs/client1/etc/fstab` file leaving only the line that starts with `proc`;
+Finally remove any unnecessary information from `/nfs/client1/etc/fstab`. THis means leaving only the line that starts with `proc`;
 
 	nano /nfs/client1/etc/fstab
 
