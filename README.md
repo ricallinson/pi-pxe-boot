@@ -77,7 +77,7 @@ Replace the line starting with `iface eth0 inet manual` with the following. The 
 
 	auto eth0
 	iface eth0 inet static
-	    address 10.0.0.88
+	    address 10.0.0.10
 	    netmask 255.255.255.0
 	    gateway 10.0.0.1
 
@@ -131,7 +131,7 @@ With the `dnsmasq` service running tail its logs and then power up a PXE enabled
 
 	tail -F /var/log/daemon.log
 
-At some point you should see something like (it could take up to 60 seconds);
+At some point you should see something like the following (it could take up to 60 seconds);
 
 	raspberrypi dnsmasq-tftp[1903]: file /tftpboot/bootcode.bin not found
 
@@ -170,9 +170,9 @@ Because the filesystem we are serving was a copy of the current one we need to e
 
 From `root=` onwards replace it with the following substituting the IP address with the IP address of your server;
 
-	root=/dev/nfs nfsroot=10.0.0.88:/nfs/client1 rw ip=dhcp rootwait elevator=deadline
+	root=/dev/nfs nfsroot=10.0.0.10:/nfs/client1 rw ip=dhcp rootwait elevator=deadline
 
-Finally remove any unnecessary information from `/nfs/client1/etc/fstab`. THis means leaving only the line that starts with `proc`;
+Finally remove any unnecessary information from `/nfs/client1/etc/fstab`. This means leaving only the line that starts with `proc`;
 
 	nano /nfs/client1/etc/fstab
 
