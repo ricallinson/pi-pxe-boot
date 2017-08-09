@@ -1,5 +1,6 @@
 # In Memory Hypervisor
 
+## Default Load
 
 `tftplist` allows you to load `.tcz` extensions via `TFTP`. This can be used to load the `nfs-utils.tcz` from the network.
 
@@ -18,3 +19,7 @@ So my boot option is `tftplist=openvz:/tcz/tcz.lst`. In the default piCore `.img
     dwc_otg.lpm_enable=0 console=ttyAMA0,115200 root=/dev/ram0 elevator=deadline rootwait quiet nortc loglevel=3 noembed waitusb=1 tftplist=10.0.0.1:/tcz/tcz.lst
 
 If your tftpserver has icmp blocked (can't ping) add `:no-ping` to the end of the option. Ex: `tftplist=10.0.0.1:/tcz/tcz.lst:no-ping`.
+
+## Getting Packages
+
+All the ARM7 packages for piCore can be downloaded from [ibiblio.org](http://distro.ibiblio.org/tinycorelinux/8.x/x86/tcz/).
