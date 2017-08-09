@@ -9,10 +9,12 @@ The boot options allowed are: `tftplist=server:path/list tftplist=server/path/li
 * `path` is the tftp path to the list file.
 * `list` is a file that contains a list of tcz extensions to load.
 
-Example: The tftp server is openvz. My tftp server expects all file names to be relative to /tftpboot. The extension to load is `/tftpboot/nfs/mc2/tftp/nfs-utils.tcz`. The list is `/tftpboot/nfs/tftp/tcz.lst`. This file contains:
+Example: The tftp server is openvz. My tftp server expects all file names to be relative to /tftpboot. The extension to load is `/tftpboot/tcz/nfs-utils.tcz`. The list is `/tftpboot/tcz/tcz.lst` file which contains (for example SSH);
 
-    nfs/mc2/tftp/nfs-utils.tcz
+    tcz/openssh.tcz
 
-So my boot option is `tftplist=openvz:/nfs/tftp/tcz.lst`.
+So my boot option is `tftplist=openvz:/tcz/tcz.lst`. In the default piCore `.img` the file `cmdline.txt` is changed to;
 
-If your tftpserver has icmp blocked (can't ping) add `:no-ping` to the end of the option. Ex: `tftplist=openvz:/nfs/tftp/tcz.lst:no-ping`.
+    dwc_otg.lpm_enable=0 console=ttyAMA0,115200 root=/dev/ram0 elevator=deadline rootwait quiet nortc loglevel=3 noembed waitusb=1 tftplist=openvz:/tcz/tcz.lst
+
+If your tftpserver has icmp blocked (can't ping) add `:no-ping` to the end of the option. Ex: `tftplist=openvz:/tcz/tcz.lst:no-ping`.
