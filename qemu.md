@@ -11,7 +11,7 @@ The boot options allowed are: `tftplist=server:path/list tftplist=server/path/li
 
 Example: The tftp server is openvz. My tftp server expects all file names to be relative to /tftpboot. The extension to load is `/tftpboot/nfs/mc2/tftp/nfs-utils.tcz`. The list is `/tftpboot/nfs/tftp/tcz`. This file contains:
 
-  nfs/mc2/tftp/nfs-utils.tcz
+    nfs/mc2/tftp/nfs-utils.tcz
 
 So my boot option is `tftplist=openvz:/nfs/tftp/tcz.lst`.
 
