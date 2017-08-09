@@ -22,4 +22,4 @@ If your tftpserver has icmp blocked (can't ping) add `:no-ping` to the end of th
 
 ## Getting Packages
 
-All the ARM7 packages for piCore can be downloaded from [ibiblio.org](http://distro.ibiblio.org/tinycorelinux/8.x/x86/tcz/).
+All the ARMv7 packages for piCore can be downloaded from [ibiblio.org](http://distro.ibiblio.org/tinycorelinux/8.x/armv7/tcz/).
