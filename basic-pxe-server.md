@@ -36,28 +36,6 @@ Make a new Raspbian SSD card or USB drive as in the first step. Login and use us
 
 	sudo apt-get update && sudo apt-get upgrade
 
-### Create a Filesystem for the Client 
-
-For the client to boot it will need a filesystem. We will copy the one we're currently using (we do this now before installing any software that the clients would not require);
-
-	sudo apt-get install rsync
-	sudo mkdir -p /nfs/client1
-	sudo rsync -xa --progress --exclude /nfs / /nfs/client1
-
-Now regenerate SSH host keys on the client filesystem by chrooting into it;
-
-	cd /nfs/client1
-	sudo mount --bind /dev dev
-	sudo mount --bind /sys sys
-	sudo mount --bind /proc proc
-	sudo chroot .
-	rm /etc/ssh/ssh_host_*
-	dpkg-reconfigure openssh-server
-	exit
-	sudo umount dev
-	sudo umount sys
-	sudo umount proc
-
 ### Switch to a Fixed IP Address
 
 To continue you need to know your networks router IP address, the IP address of the current Pi and the IP address of the networks DNS server;
@@ -153,27 +131,6 @@ If all has gone well this should now allow the client Pi to boot through until i
 
 When a client successfully connects you'll see log lines of the conversation as it attempts to network boot.
 
-### Serve a Filesystem
+## Serve and OS
 
-Now your PXE enabled clients can successfully request a filesystem we need to provide one. For this example we'll use NFS to the serve one we made earlier.
-
-	sudo apt-get install nfs-kernel-server
-	echo "/nfs/client1 *(rw,sync,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
-	sudo systemctl enable rpcbind
-	sudo systemctl restart rpcbind
-	sudo systemctl enable nfs-kernel-server
-	sudo systemctl restart nfs-kernel-server
-
-Because the filesystem we are serving was a copy of the current one we need to edit `/tftpboot/cmdline.txt` file to remove unnecessary information;
-
-	nano /tftpboot/cmdline.txt
-
-From `root=` onwards replace it with the following substituting the IP address with the IP address of your server;
-
-	root=/dev/nfs nfsroot=10.0.0.10:/nfs/client1 rw ip=dhcp rootwait elevator=deadline
-
-Finally remove any unnecessary information from `/nfs/client1/etc/fstab`. This means leaving only the line that starts with `proc`;
-
-	nano /nfs/client1/etc/fstab
-
-With all this completed you can now restart your PXE enable client Pi and watch it boot into Raspbian Lite.
+Follow the netboot-to-picore.md instructions.

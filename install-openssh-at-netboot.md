@@ -1,5 +1,11 @@
 # SSH Server
 
+Notes on installing OpenSSH (or any piCore package) with netboot.
+
+## Getting Packages
+
+More ARMv7 packages for piCore can be downloaded from [ibiblio.org](http://distro.ibiblio.org/tinycorelinux/8.x/armv7/tcz/).
+
 ## Adding Packages
 
 The option `tftplist` allows you to load `.tcz` extensions via `TFTP`. This can be used to load the `openssh.tcz` and `qemu-arm.tcz` from the the `tftp` server.
@@ -42,7 +48,3 @@ If your tftpserver has icmp blocked (can't ping) add `:no-ping` to the end of th
 ## Starting SSH
 
 Hmm...
-
-## Getting Packages
-
-All the ARMv7 packages for piCore can be downloaded from [ibiblio.org](http://distro.ibiblio.org/tinycorelinux/8.x/armv7/tcz/).

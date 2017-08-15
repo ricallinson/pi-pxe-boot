@@ -1,6 +1,6 @@
-# Using piCore for Netboot
+# Netboot to piCore
 
-Perform this only after following the README.md instructions.
+Perform this only after following the basic-pxe-server.md instructions.
 
 ## Download piCore
 
@@ -32,12 +32,3 @@ You should see the same list of files as before but in the `tftpboot` directory.
 ## Try it Out
 
 If all the above was successful power up a PXE enabled Pi on the same physical network and it should now boot into piCore.
-
-## Cleanup
-
-Using piCore means that NFS is not required and you should always remove unneeded services from your server.
-
-	sudo systemctl disable rpcbind
-	sudo systemctl disable nfs-kernel-server
-	sudo apt-get remove nfs-kernel-server
-	sudo rm -rf /nfs

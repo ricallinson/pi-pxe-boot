@@ -1,6 +1,6 @@
 # Unpacking and Packing piCore.gz
 
-# Pi
+Notes on how to unpack and pack a piCore `.gz` filesystem.
 
 ## Unpack
 
