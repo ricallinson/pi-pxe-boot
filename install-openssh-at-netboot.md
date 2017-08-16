@@ -37,7 +37,6 @@ Now download the packages just listed into the same directory;
 	sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/libcap.tcz
 	sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/libedit.tcz
 	sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/libevent.tcz
-	<!-- sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/gcc_libs.tcz -->
 	sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/openssl.tcz
 	sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/openssh.tcz
 	sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/ntp.tcz
@@ -52,11 +51,11 @@ Append the following;
 
 If your tftpserver has icmp blocked (can't ping) add `:no-ping` to the end of the option. Ex: `tftplist=10.0.0.1:/tcz/tcz.lst:no-ping`.
 
-## Starting SSH
+## Starting the SSH Server
 
 __NOTE__: piCore is loaded into memory on each boot. These instructions will need to be entered each time the Pi is rebooted.
 
-Update the date;
+Update the time and date from the PXE server;
 
 	sudo ntpdate 10.0.0.1
 
