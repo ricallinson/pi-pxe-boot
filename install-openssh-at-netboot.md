@@ -4,7 +4,7 @@ Notes on installing OpenSSH (or any piCore package) with netboot.
 
 ## Getting Packages
 
-More ARMv7 packages for piCore can be downloaded from [ibiblio.org](http://distro.ibiblio.org/tinycorelinux/8.x/armv7/tcz/).
+More ARMv7 packages for piCore can be downloaded from [ibiblio.org](http://distro.ibiblio.org/tinycorelinux/9.x/armv7/tcz/).
 
 ## Adding Packages
 
