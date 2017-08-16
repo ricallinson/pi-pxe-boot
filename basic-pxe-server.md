@@ -75,7 +75,20 @@ To make sure this is not changed by other processes we make the file immutable;
 
 ### Install the Server Software
 
-Now we install all the services required to create a PXE server.
+Now we install all the services required to create a PXE server starting with time.
+
+	sudo apt-get install ntp
+	nano /etc/ntp.conf
+
+In the configuration file add this to a new line after the last `restrict` line;
+
+	restrict 10.0.0.0 mask 255.255.255.0
+
+Now restart the `ntp` server;
+
+	sudo /etc/init.d/ntp restart
+
+Next install the software that will answer the PXE client requests;
 
 	sudo apt-get install dnsmasq
 

@@ -25,15 +25,22 @@ Create a new directory with a list file in it;
 
 Add the following to the file and save it;
 
-	/tcz/gcc_libs.tcz
+	/tcz/libcap.tcz
+	/tcz/libedit.tcz
+	/tcz/libevent.tcz
 	/tcz/openssl.tcz
-    /tcz/openssh.tcz
+	/tcz/openssh.tcz
+	/tcz/ntp.tcz
 
 Now download the packages just listed into the same directory;
 
-	sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/gcc_libs.tcz
+	sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/libcap.tcz
+	sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/libedit.tcz
+	sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/libevent.tcz
+	<!-- sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/gcc_libs.tcz -->
 	sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/openssl.tcz
 	sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/openssh.tcz
+	sudo wget -P /tftpboot/tcz/  http://tinycorelinux.net/9.x/armv6/tcz/ntp.tcz
 
 Finally alter the boot option in `/tftpboot/cmdline3.txt`;
 
@@ -47,4 +54,25 @@ If your tftpserver has icmp blocked (can't ping) add `:no-ping` to the end of th
 
 ## Starting SSH
 
-Hmm...
+__NOTE__: piCore is loaded into memory on each boot. These instructions will need to be entered each time the Pi is rebooted.
+
+Update the date;
+
+	sudo ntpdate 10.0.0.1
+
+Change the password of the current `tc` user;
+
+	passwd
+
+Now copy the sample configuration to `sshsshd_config` and start the SSH server;
+
+	sudo cp /usr/local/etc/ssh/sshd_config.example /usr/local/etc/ssh/sshd_config
+	sudo /usr/local/etc/init.d/openssh start
+
+Get your current IP address;
+
+	ifconfig
+
+Then from a deferent machine on the same network `ssh` to your new server;
+
+	ssh tc@<ip-address>
